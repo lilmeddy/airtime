@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+        <script>
+        let isAuthenticated = localStorage.getItem("isAuthenticated");
+        if (!isAuthenticated) {
+          window.location.href = "log.html";
+        }
+            </script>
+    <link rel="stylesheet" href="dash.css">
+
+</head>
+<body>
+<main id="left">
+ <div> <button onclick="showCreatePostForm()">Create Post</button></div>
+  <div><button onclick="showLikedPosts()">Liked Posts</button></div>
+  <div><button onclick="showAllPosts()">All Posts</button></div>
+</main> 
+<main id="right">
+  <header>
+    <nav class="one"></nav>
+  </header>
+
+
+  <div id="createPostForm" style="display: none;">
+    <form id="postForm">
+      <label for="title">Title:</label>
+      <input type="text" id="title" required>
+      <br>
+      <label for="content">Content:</label>
+      <textarea id="content" required></textarea>
+      <br>
+      <button type="submit">Create Post</button>
+    </form>
+
+</div>
+</main>
+</body>
+</html>
+<script src="dash.js"></script>

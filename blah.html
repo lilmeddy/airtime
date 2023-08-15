@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dashboard</title>
+  <style>
+    .container {
+      display: flex;
+    }
+
+    .left-section {
+      flex: 1;
+    }
+
+    .right-section {
+      flex: 2;
+    }
+
+    .post {
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Dashboard</h1>
+
+  <div class="container">
+    <div class="left-section">
+      <button onclick="showCreatePostForm()">Create Post</button>
+      <button onclick="showLikedPosts()">Liked Posts</button>
+      <button onclick="showAllPosts()">All Posts</button>
+    </div>
+
+    <div class="right-section">
+      <div id="contentContainer"></div>
+    </div>
+  </div>
+
+  <div id="createPostForm" style="display: none;">
+    <form id="postForm">
+      <label for="title">Title:</label>
+      <input type="text" id="title" required>
+      <br>
+      <label for="content">Content:</label>
+      <textarea id="content" required></textarea>
+      <br>
+      <button type="submit">Create Post</button>
+    </form>
+  </div>
+
+  <script>
+    // Retrieve posts from local storage or initialize an empty array
+    let posts = JSON.parse(localStorage.getItem('posts')) || [];
+
+    // Function to render the content in the right section
+    function renderContent(content) {
+     let contentContainer = document.getElementById('contentContainer');
+      contentContainer.innerHTML = content;
+    }
+
+    // Function to show the create post form
+    function showCreatePostForm() {
+     let createPostForm = document.getElementById('createPostForm');
+      createPostForm.style.display = 'block';
+
+      renderContent('');
+    }
+
+    // Function to show the liked posts
+    function showLikedPosts() {
+     let likedPosts = posts.filter(post => post.liked);
+
+      if (likedPosts.length > 0) {
+       let content = likedPosts
+          .map(post => `
+            <div class="post">
+              <h3>${post.title}</h3>
+              <p>${post.content}</p>
+            </div>
+          `)
+          .join('');
+
+        renderContent(content);
+      } else {
+        renderContent('<p>No liked posts found.</p>');
+      }
+    }
+
+    // Function to show all posts
+    function showAllPosts() {
+      if (posts.length > 0) {
+       let content = posts
+          .map(post => `
+            <div class="post">
+              <h3>${post.title}</h3>
+              <p>${post.content}</p>
+            </div>
+          `)
+          .join('');
+
+        renderContent(content);
+      } else {
+        renderContent('<p>No posts found.</p>');
+      }
+    }
+
+    // Function to handle post creation
+    function createPost(event) {
+      event.preventDefault();
+
+     let titleInput = document.getElementById('title');
+     let contentInput = document.getElementById('content');
+
+     let post = {
+        title: titleInput.value,
+        content: contentInput.value,
+        liked: false
+      };
+
+      posts.unshift(post);
+      localStorage.setItem('posts', JSON.stringify(posts));
+
+      titleInput.value = '';
+      contentInput.value = '';
+
+      showAllPosts();
+
+     let createPostForm = document.getElementById('createPostForm');
+      createPostForm.style.display = 'none';
+    }
+
+    // Add event listener to the form
+   let postForm = document.getElementById('postForm');
+    postForm.addEventListener('submit', createPost);
+
+    // Initial render
+    showAllPosts();
+  </script>
+</body>
+</html>
